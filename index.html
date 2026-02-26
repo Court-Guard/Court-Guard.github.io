@@ -198,8 +198,8 @@
                             <p class="figure-caption text-muted">A three-stage pipeline transforming safety evaluation into Evidentiary Debate.</p>
                         </div>
                         <div class="method-figure-image text-center">
-                            <img src="courtguard_framework.png" alt="CourtGuard Framework Diagram showing Policy Grounding RAG, Adversarial Debate Module, and Judge Evaluation" class="img-fluid framework-image clickable-image" onclick="openImageModal(this)">
-                        </div>
+                            <img src="main_system.png" alt="CourtGuard Framework Diagram showing Policy Grounding RAG, Adversarial Debate Module, and Judge Evaluation" class="img-fluid framework-image clickable-image" onclick="openImageModal(this)">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,90 +249,17 @@
                         <p class="table-description text-muted mb-4">
                             We compare <strong>CourtGuard</strong> against <strong>Static Guardrails</strong> (LlamaGuard, ShieldGemma, WildGuard) and <strong>Generic LLM Judges</strong>. CourtGuard-GPT-OSS-20B (2 Iter) achieves the highest macro average accuracy (0.87) and F1 score (0.86), surpassing widely used models like LlamaGuard 4 without any fine-tuning.
                         </p>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover results-table complex-table" id="resultsTable">
-                                <thead class="table-dark">
-                                    <tr class="header-group">
-                                        <th rowspan="2" class="model-header">Method</th>
-                                        <th colspan="2" class="group-header text-center">AVERAGE</th>
-                                        <th colspan="2" class="group-header text-center">AdvBenchM</th>
-                                        <th colspan="2" class="group-header text-center">Jail Judge</th>
-                                        <th colspan="2" class="group-header text-center">HarmBench</th>
-                                    </tr>
-                                    <tr class="header-subgroup">
-                                        <th class="subgroup-header">Acc</th>
-                                        <th class="subgroup-header">F1</th>
-                                        <th class="subgroup-header">Acc</th>
-                                        <th class="subgroup-header">F1</th>
-                                        <th class="subgroup-header">Acc</th>
-                                        <th class="subgroup-header">F1</th>
-                                        <th class="subgroup-header">Acc</th>
-                                        <th class="subgroup-header">F1</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="table-secondary"><td colspan="9"><strong>Static Guardrails & Baselines</strong></td></tr>
-                                    <tr>
-                                        <td>LlamaGuard 4</td>
-                                        <td>0.75</td><td>0.77</td>
-                                        <td>0.98</td><td>0.96</td>
-                                        <td>0.72</td><td>0.74</td>
-                                        <td>0.78</td><td>0.81</td>
-                                    </tr>
-                                    <tr>
-                                        <td>ShieldGemma 27B</td>
-                                        <td>0.57</td><td>0.53</td>
-                                        <td>0.63</td><td>0.46</td>
-                                        <td>0.50</td><td>0.54</td>
-                                        <td>0.48</td><td>0.47</td>
-                                    </tr>
-                                    <tr>
-                                        <td>WildGuard</td>
-                                        <td>0.86</td><td>0.84</td>
-                                        <td>1.00</td><td>1.00</td>
-                                        <td>0.89</td><td>0.88</td>
-                                        <td>0.84</td><td>0.86</td>
-                                    </tr>
-                                    <tr>
-                                        <td>GPT-OSS-Safeguard-20B</td>
-                                        <td>0.82</td><td>0.78</td>
-                                        <td>0.98</td><td>0.99</td>
-                                        <td>0.80</td><td>0.78</td>
-                                        <td>0.82</td><td>0.82</td>
-                                    </tr>
-                                    <tr class="table-secondary"><td colspan="9"><strong>Generic LLM Judges</strong></td></tr>
-                                    <tr>
-                                        <td>Reasoning Llama-70B</td>
-                                        <td>0.86</td><td>0.84</td>
-                                        <td>0.94</td><td>0.97</td>
-                                        <td>0.89</td><td>0.89</td>
-                                        <td>0.88</td><td>0.87</td>
-                                    </tr>
-                                    <tr>
-                                        <td>JailJudge-MultiAgent-GPT-20B</td>
-                                        <td>0.83</td><td>0.86</td>
-                                        <td>0.98</td><td>0.96</td>
-                                        <td>0.90</td><td>0.90</td>
-                                        <td>0.86</td><td>0.87</td>
-                                    </tr>
-                                    <tr class="table-secondary"><td colspan="9"><strong>Policy-Grounded (Ours)</strong></td></tr>
-                                    <tr>
-                                        <td><strong>CourtGuard-Llama-70B (2 Iter)</strong></td>
-                                        <td>0.84</td><td>0.86</td>
-                                        <td>1.00</td><td>1.00</td>
-                                        <td>0.87</td><td>0.86</td>
-                                        <td>0.86</td><td>0.86</td>
-                                    </tr>
-                                    <tr class="table-success">
-                                        <td><strong>CourtGuard-GPT-OSS-20B (2 Iter)</strong></td>
-                                        <td><strong>0.86</strong></td><td><strong>0.87</strong></td>
-                                        <td><strong>1.00</strong></td><td><strong>1.00</strong></td>
-                                        <td><strong>0.89</strong></td><td><strong>0.89</strong></td>
-                                        <td><strong>0.87</strong></td><td><strong>0.85</strong></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <div class="text-center mb-5">
+                            <img src="main_results.jpg" alt="Main Results: Performance Across 8 Datasets" class="img-fluid border rounded shadow-sm clickable-image" onclick="openImageModal(this)">
+                        </div>
+
+                                                <h4 class="mb-4 mt-5 border-top pt-4">Aggregated Safety Sensitivity & Human-Verified Attacks</h4>
+                        <p class="table-description text-muted mb-4">
+                            CourtGuard neutralizes the trade-off between helpfulness and safety, maintaining high specificity without succumbing to high False Negative rates on complex optimization attacks.
+                        </p>
+                        <div class="text-center">
+                            <img src="aggregation.jpg" alt="Aggregated Performance and Human Verified Attacks" class="img-fluid border rounded shadow-sm clickable-image" onclick="openImageModal(this)">
+                        </div>
                     </div>
                 </div>
             </div>
