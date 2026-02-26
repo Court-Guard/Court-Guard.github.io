@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtGuard: A Model-Agnostic Framework for Zero-Shot Policy Adaptation in LLM Safety</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#home">CourtGuard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#abstract">Abstract</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#problem">Adaptation Rigidity</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#framework">CourtGuard Framework</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#results">Results</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#findings">Key Findings</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <h1 class="display-4 fw-bold text-primary mb-4 text-center">
+                        CourtGuard: A Model-Agnostic Framework for <br> 
+                        Zero-Shot Policy Adaptation in <br>
+                        LLM Safety
+                    </h1>
+                    <p class="lead text-muted mb-4 text-center">
+                        A retrieval-augmented multi-agent framework that reimagines safety evaluation as Evidentiary Debate. <br>
+                        By orchestrating an adversarial debate grounded in external policy documents, it overcomes adaptation rigidity without expensive retraining.
+                    </p>
+
+                    <div class="text-center mb-4">
+                        <a href="https://anonymous.4open.science/r/CourtGuard_ICML/README.md" class="btn btn-primary btn-lg">
+                            <i class="bi bi-download"></i> Datasets & Code
+                        </a>
+                    </div>
+
+                    <div class="authors-section text-center mb-4">
+                        <h5 class="mb-2">Authors</h5>
+                        <p class="authors-names mb-1">
+                            <strong>Umid Suleymanov, Rufiz Bayramov, Suad Gafarli, Seljan Musayeva, Taghi Mammadov, Aynur Akhundlu, Murat Kantarcioglu</strong>
+                        </p>
+                        <p class="text-muted small">Virginia Tech, ADA University</p>
+                    </div>
+                    
+                    <div class="key-stats row">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h3 class="text-success">90%</h3>
+                                <p>Accuracy on Zero-Shot Wikipedia Vandalism</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h3 class="text-success">93.9%</h3>
+                                <p>Expert-AI Alignment in Legal Compliance</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h3 class="text-info">8</h3>
+                                <p>Safety Benchmarks Evaluated</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="abstract" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Abstract</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="abstract-content p-4 bg-white rounded shadow-sm">
+                        <p class="lead">
+                            Current safety mechanisms for Large Language Models (LLMs) rely heavily on static, fine-tuned classifiers that suffer from <strong>adaptation rigidity</strong>, the inability to enforce new governance rules without expensive retraining.
+                        </p>
+                        <p>
+                            To address this, we introduce <strong>COURTGUARD</strong>, a retrieval-augmented multi-agent framework that reimagines safety evaluation as Evidentiary Debate. By orchestrating an adversarial debate grounded in external policy documents, COURTGUARD achieves state-of-the-art performance across 7 safety benchmarks, outperforming dedicated policy-following baselines without fine-tuning.
+                        </p>
+                        <div class="research-questions mt-4">
+                            <h5>Core Contributions</h5>
+                            <ul class="rq-list">
+                                <li><strong>Dynamic Policy Adaptability:</strong> Generalizes to out-of-domain tasks (Wikipedia Vandalism and Legal Domain adaptation based on GDPR) without fine-tuning, solely by swapping the reference policy.</li>
+                                <li><strong>Evidentiary Debate:</strong> Replaces opaque model intuition with verifiable citations, mitigating hallucination risks by constraining agents to strictly ground arguments in retrieved clauses.</li>
+                                <li><strong>Automated Data Curation & Auditing:</strong> Acts as a high-fidelity automated annotator to uncover label noise in existing benchmarks.</li>
+                                <li><strong>Architectural Agnosticism:</strong> Compatible with diverse architectures (Llama-3-70B, GPT-OSS-20B), preventing vendor lock-in and allowing modular composition.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="problem" class="py-5">
+        <div class="container">
+            <h2 class="section-title">The Problem: Adaptation Rigidity</h2>
+            <p class="text-center mb-5">
+                The landscape of LLM safety evaluation has evolved, but current defenses fall into rigid paradigms that fail when a deployment environment undergoes a sudden policy shift (e.g., a "Medical Advice Shift").
+            </p>
+
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="semsi-category" data-category="static">
+                        <div class="category-header" onclick="toggleCategory('static')">
+                            <h4 class="icon-identity">Static Guardrails</h4>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="static-content">
+                            <p><strong>Definition:</strong> Models explicitly trained for safety classification and refusal (e.g., LlamaGuard, WildGuard, ShieldGemma).</p>
+                            <div class="examples">
+                                <h6>Limitations:</h6>
+                                <ul>
+                                    <li>Bakes safety alignments directly into weights.</li>
+                                    <li>Suffers from the "alignment lag".</li>
+                                    <li>Requires costly retraining to adapt to new rules.</li>
+                                </ul>
+                            </div>
+                            <div class="threat-level">
+                                <span class="badge bg-warning">Adaptation Risk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="semsi-category" data-category="agentic">
+                        <div class="category-header" onclick="toggleCategory('agentic')">
+                            <h4 class="icon-reputation">Agentic Adjudication</h4>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="agentic-content">
+                            <p><strong>Definition:</strong> LLM-as-a-Judge frameworks that use reasoning or multi-agent voting (e.g., JailJudge).</p>
+                            <div class="examples">
+                                <h6>Limitations:</h6>
+                                <ul>
+                                    <li>Relies on internal parametric knowledge.</li>
+                                    <li><strong>Hallucination:</strong> Agents confidently assert false safety facts.</li>
+                                    <li><strong>Drift:</strong> Defaults to generic morality rather than domain-specific rules.</li>
+                                </ul>
+                            </div>
+                            <div class="threat-level">
+                                <span class="badge bg-danger">Epistemological Risk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="semsi-category" data-category="policy">
+                        <div class="category-header" onclick="toggleCategory('policy')">
+                            <h4 class="icon-hazard">Policy-Following Frameworks</h4>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="policy-content">
+                            <p><strong>Definition:</strong> Systems allowing inference-time policy input (e.g., GPT-OSS-Safeguard).</p>
+                            <div class="examples">
+                                <h6>Limitations:</h6>
+                                <ul>
+                                    <li>Architectural coupling to specific model weights.</li>
+                                    <li>Relies on single-pass reasoning without dialectical validation.</li>
+                                    <li>Restricts leveraging newer, more capable models as judges.</li>
+                                </ul>
+                            </div>
+                            <div class="threat-level">
+                                <span class="badge bg-danger">Lock-in Risk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="framework" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">The CourtGuard Framework</h2>
+
+            <div class="row mb-5">
+                <div class="col-lg-10 mx-auto">
+                    <div class="method-figure-container">
+                        <div class="figure-title text-center mb-3">
+                            <h5>Schematic overview of the CourtGuard methodology</h5>
+                            <p class="figure-caption text-muted">A three-stage pipeline transforming safety evaluation into Evidentiary Debate.</p>
+                        </div>
+                        <div class="method-figure-image text-center">
+                            <img src="courtguard_framework.png" alt="CourtGuard Framework Diagram showing Policy Grounding RAG, Adversarial Debate Module, and Judge Evaluation" class="img-fluid framework-image clickable-image" onclick="openImageModal(this)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="framework-explanation">
+                        <h4>Tri-Component Architecture</h4>
+                        <p>CourtGuard addresses the limitations of "black-box" guardrails through a transparent, decoupled pipeline:</p>
+
+                        <div class="agent-details row">
+                            <div class="col-md-4">
+                                <div class="agent-card eval-card h-100 p-3 border rounded bg-white">
+                                    <h5><i class="icon-eval"></i> 1. Policy Grounding RAG</h5>
+                                    <p>Given a corpus of governance documents (e.g., MLCommons, OpenAI Usage Policies), it segments, embeds, and retrieves the top-k most relevant clauses to ground all subsequent debate rounds. Replaces implicit intuition with facts.</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="agent-card edit-card h-100 p-3 border rounded bg-white">
+                                    <h5><i class="icon-edit"></i> 2. Adversarial Debate</h5>
+                                    <p>A structured N-round debate (default N=2). <br><strong>Attacker (A):</strong> Identifies regulatory and practical pathways to harm. <br><strong>Defender (D):</strong> Counters with evidence of compliance, exemptions, and high implementation barriers.</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="agent-card eval-card h-100 p-3 border rounded bg-white">
+                                    <h5><i class="icon-eval"></i> 3. Judge Evaluation</h5>
+                                    <p>The Judge synthesizes the debate, assigning threat scores (1-3) for Regulatory and Practical threats. The total rating determines the deterministic final verdict: {SAFE, BORDERLINE, UNSAFE}.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="results" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Benchmark Results</h2>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="results-table-container">
+                        <h4 class="mb-4">Main Results: Performance Across 8 Datasets</h4>
+                        <p class="table-description text-muted mb-4">
+                            We compare <strong>CourtGuard</strong> against <strong>Static Guardrails</strong> (LlamaGuard, ShieldGemma, WildGuard) and <strong>Generic LLM Judges</strong>. CourtGuard-GPT-OSS-20B (2 Iter) achieves the highest macro average accuracy (0.87) and F1 score (0.86), surpassing widely used models like LlamaGuard 4 without any fine-tuning.
+                        </p>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover results-table complex-table" id="resultsTable">
+                                <thead class="table-dark">
+                                    <tr class="header-group">
+                                        <th rowspan="2" class="model-header">Method</th>
+                                        <th colspan="2" class="group-header text-center">AVERAGE</th>
+                                        <th colspan="2" class="group-header text-center">AdvBenchM</th>
+                                        <th colspan="2" class="group-header text-center">Jail Judge</th>
+                                        <th colspan="2" class="group-header text-center">HarmBench</th>
+                                    </tr>
+                                    <tr class="header-subgroup">
+                                        <th class="subgroup-header">Acc</th>
+                                        <th class="subgroup-header">F1</th>
+                                        <th class="subgroup-header">Acc</th>
+                                        <th class="subgroup-header">F1</th>
+                                        <th class="subgroup-header">Acc</th>
+                                        <th class="subgroup-header">F1</th>
+                                        <th class="subgroup-header">Acc</th>
+                                        <th class="subgroup-header">F1</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-secondary"><td colspan="9"><strong>Static Guardrails & Baselines</strong></td></tr>
+                                    <tr>
+                                        <td>LlamaGuard 4</td>
+                                        <td>0.75</td><td>0.77</td>
+                                        <td>0.98</td><td>0.96</td>
+                                        <td>0.72</td><td>0.74</td>
+                                        <td>0.78</td><td>0.81</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ShieldGemma 27B</td>
+                                        <td>0.57</td><td>0.53</td>
+                                        <td>0.63</td><td>0.46</td>
+                                        <td>0.50</td><td>0.54</td>
+                                        <td>0.48</td><td>0.47</td>
+                                    </tr>
+                                    <tr>
+                                        <td>WildGuard</td>
+                                        <td>0.86</td><td>0.84</td>
+                                        <td>1.00</td><td>1.00</td>
+                                        <td>0.89</td><td>0.88</td>
+                                        <td>0.84</td><td>0.86</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPT-OSS-Safeguard-20B</td>
+                                        <td>0.82</td><td>0.78</td>
+                                        <td>0.98</td><td>0.99</td>
+                                        <td>0.80</td><td>0.78</td>
+                                        <td>0.82</td><td>0.82</td>
+                                    </tr>
+                                    <tr class="table-secondary"><td colspan="9"><strong>Generic LLM Judges</strong></td></tr>
+                                    <tr>
+                                        <td>Reasoning Llama-70B</td>
+                                        <td>0.86</td><td>0.84</td>
+                                        <td>0.94</td><td>0.97</td>
+                                        <td>0.89</td><td>0.89</td>
+                                        <td>0.88</td><td>0.87</td>
+                                    </tr>
+                                    <tr>
+                                        <td>JailJudge-MultiAgent-GPT-20B</td>
+                                        <td>0.83</td><td>0.86</td>
+                                        <td>0.98</td><td>0.96</td>
+                                        <td>0.90</td><td>0.90</td>
+                                        <td>0.86</td><td>0.87</td>
+                                    </tr>
+                                    <tr class="table-secondary"><td colspan="9"><strong>Policy-Grounded (Ours)</strong></td></tr>
+                                    <tr>
+                                        <td><strong>CourtGuard-Llama-70B (2 Iter)</strong></td>
+                                        <td>0.84</td><td>0.86</td>
+                                        <td>1.00</td><td>1.00</td>
+                                        <td>0.87</td><td>0.86</td>
+                                        <td>0.86</td><td>0.86</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td><strong>CourtGuard-GPT-OSS-20B (2 Iter)</strong></td>
+                                        <td><strong>0.86</strong></td><td><strong>0.87</strong></td>
+                                        <td><strong>1.00</strong></td><td><strong>1.00</strong></td>
+                                        <td><strong>0.89</strong></td><td><strong>0.89</strong></td>
+                                        <td><strong>0.87</strong></td><td><strong>0.85</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="findings" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Key Findings</h2>
+
+            <div class="findings-container">
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="finding-card h-100" onclick="toggleFinding('pareto', event)">
+                            <div class="finding-header">
+                                <h4 class="icon-chart">1. Zero-Shot Domain Adaptation</h4>
+                                <span class="toggle-icon" id="pareto-toggle">+</span>
+                            </div>
+                            <div class="finding-content" id="pareto-finding">
+                                <p>
+                                    CourtGuard successfully generalizes to entirely out-of-domain tasks without any weight updates, simply by swapping the reference policy in the RAG store. 
+                                </p>
+                                <div class="finding-details">
+                                    <h6>Performance Highlights:</h6>
+                                    <ul>
+                                        <li><strong>Wikipedia Vandalism:</strong> Achieved <strong>90% accuracy</strong> applying WP:VANDAL rules, correctly identifying "silly vandalism" vs "good faith" edits.</li>
+                                        <li><strong>Legal & Privacy:</strong> Achieved <strong>93.9% Expert-AI Alignment</strong> when applying complex European Union law (GDPR Art. 5/6 and InfoSoc Directive).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="finding-card h-100" onclick="toggleFinding('scale', event)">
+                            <div class="finding-header">
+                                <h4 class="icon-scale">2. The Liability of Parametric Safety</h4>
+                                <span class="toggle-icon" id="scale-toggle">+</span>
+                            </div>
+                            <div class="finding-content" id="scale-finding">
+                                <p>
+                                    Baselines relying on "parametric intuition" (implicit knowledge baked into weights) suffer from frozen alignment. They cannot inherently adapt to a new policy without fine-tuning.
+                                </p>
+                                <div class="finding-details">
+                                    <h6>Key Insight:</h6>
+                                    <ul>
+                                        <li>While generic reasoning models achieve high accuracy, they lack explicit policy grounding.</li>
+                                        <li>CourtGuard matches or exceeds SOTA performance while providing <strong>verifiable citations</strong>, eliminating the "black box" trust issue.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="finding-card h-100" onclick="toggleFinding('reasoning', event)">
+                            <div class="finding-header">
+                                <h4 class="icon-reasoning">3. Automated Data Curation & Auditing</h4>
+                                <span class="toggle-icon" id="reasoning-toggle">+</span>
+                            </div>
+                            <div class="finding-content" id="reasoning-finding">
+                                <p>
+                                    CourtGuard acts as a rigorous policy auditor. In analyzing disagreements with human-annotated ground truth, our model correctly flagged content that human labelers missed.
+                                </p>
+                                <div class="finding-details">
+                                    <h6>Audit Results:</h6>
+                                    <ul>
+                                        <li>Uncovered significant label noise: <strong>14.67% flip rate</strong> in BeaverTails and <strong>14.44% flip rate</strong> in ToxicChat.</li>
+                                        <li>Successfully corrected False Negatives (overlooked masked risks) and False Positives (keyword-triggered over-censorship).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 mb-4">
+                        <div class="finding-card highlight-finding h-100" onclick="toggleFinding('calibration', event)">
+                            <div class="finding-header">
+                                <h4 class="icon-calibration">4. Architectural Freedom</h4>
+                                <span class="toggle-icon" id="calibration-toggle">+</span>
+                            </div>
+                            <div class="finding-content" id="calibration-finding">
+                                <p>
+                                    Unlike bespoke inference-time safeguards (e.g., gpt-oss-safeguard) which are tied to specific weights, CourtGuard strictly decouples safety logic from model weights.
+                                </p>
+                                <div class="finding-details">
+                                    <h6>System Advantages:</h6>
+                                    <ul>
+                                        <li><strong>No Vendor Lock-in:</strong> Functions identically across Llama-3-70B and GPT-OSS-20B backbones.</li>
+                                        <li><strong>Modular Composition:</strong> Allows organizations to deploy lightweight models for defense and heavy models for judgment to optimize costs.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-4 bg-dark text-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>CourtGuard: A Model-Agnostic Framework for Zero-Shot Policy Adaptation in LLM Safety</h5>
+                    <p class="mb-2">
+                        An inference-time framework for agentic, policy-grounded adjudication of generative AI responses.
+                    </p>
+                    <p class="text-muted mb-0">
+                        Under review.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <p class="mb-1">Research Areas:</p>
+                    <div class="research-tags">
+                        <span class="badge bg-secondary">AI Safety</span>
+                        <span class="badge bg-secondary">Multi-Agent Systems</span>
+                        <span class="badge bg-secondary">RAG</span>
+                        <span class="badge bg-secondary">Policy Adaptation</span>
+                        <span class="badge bg-secondary">Governance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <div class="image-modal-content">
+            <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="image-modal-caption">
+                <h5 id="modalTitle"></h5>
+                <p id="modalCaption"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple script to handle toggles and modals mimicking original style
+        function toggleCategory(categoryId) {
+            const content = document.getElementById(categoryId + '-content');
+            const icon = event.currentTarget.querySelector('.toggle-icon');
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                icon.textContent = "+";
+            } else {
+                content.style.display = "block";
+                icon.textContent = "-";
+            }
+        }
+
+        function toggleFinding(findingId, event) {
+            // Prevent toggling if clicking inside the content itself
+            if(event.target.closest('.finding-content')) return;
+            
+            const content = document.getElementById(findingId + '-finding');
+            const icon = document.getElementById(findingId + '-toggle');
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                icon.textContent = "+";
+            } else {
+                content.style.display = "block";
+                icon.textContent = "-";
+            }
+        }
+
+        function openImageModal(imgElement) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = imgElement.src;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>
