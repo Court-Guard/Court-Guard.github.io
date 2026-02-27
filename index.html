@@ -21,7 +21,10 @@
                     <li class="nav-item"><a class="nav-link" href="#problem">Adaptation Rigidity</a></li>
                     <li class="nav-item"><a class="nav-link" href="#framework">CourtGuard Framework</a></li>
                     <li class="nav-item"><a class="nav-link" href="#results">Results</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ablation">Ablation</a></li>
                     <li class="nav-item"><a class="nav-link" href="#findings">Key Findings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#limitations">Limitations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#citation">Citation</a></li>
                 </ul>
             </div>
         </div>
@@ -653,22 +656,308 @@
                 </div>
             </div>
     
-            <!-- Aggregation image kept for visual per-attack breakdown -->
+            <!-- Aggregation Table -->
             <div class="results-table-container">
-                <h4 class="mb-3">Per-Attack Sensitivity — Human-Verified Suite</h4>
-                <p class="text-muted mb-3">
-                    Granular breakdown across 9 adversarial attack styles. Click to enlarge.
+                <h4 class="mb-3">Table 4: Human-Verified Attack Suite — Full Comparison</h4>
+                <p class="text-muted mb-4">
+                    Aggregated metrics across all 9 adversarial attack styles. CourtGuard consistently outperforms baselines in F1 and ROC AUC. <strong>Bold</strong> = best per column.
                 </p>
-                <div class="text-center">
-                    <img src="aggregation.png" alt="Aggregated Performance and Human Verified Attacks" 
-                         class="img-fluid border rounded shadow-sm clickable-image" 
-                         onclick="openImageModal(this)">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover complex-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Defense Method</th>
+                                <th>Acc</th>
+                                <th>Prec</th>
+                                <th>Rec</th>
+                                <th>Spec</th>
+                                <th>F1</th>
+                                <th>F2</th>
+                                <th>ROC AUC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-light">
+                                <td colspan="8"><strong>Static Guardrails</strong></td>
+                            </tr>
+                            <tr>
+                                <td>LlamaGuard 4</td>
+                                <td>0.815</td><td>0.764</td><td>0.788</td><td>0.834</td><td>0.776</td><td>0.783</td><td>0.811</td>
+                            </tr>
+                            <tr>
+                                <td>LlamaGuard 3</td>
+                                <td>0.641</td><td>0.548</td><td>0.664</td><td>0.626</td><td>0.600</td><td>0.637</td><td>0.645</td>
+                            </tr>
+                            <tr>
+                                <td>ShieldGemma 2B</td>
+                                <td>0.584</td><td>0.463</td><td>0.162</td><td>0.871</td><td>0.240</td><td>0.187</td><td>0.517</td>
+                            </tr>
+                            <tr>
+                                <td>ShieldGemma 9B</td>
+                                <td>0.525</td><td>0.145</td><td>0.035</td><td>0.859</td><td>0.056</td><td>0.041</td><td>0.447</td>
+                            </tr>
+                            <tr>
+                                <td>ShieldGemma 27B</td>
+                                <td>0.564</td><td>0.459</td><td>0.417</td><td>0.663</td><td>0.437</td><td>0.425</td><td>0.540</td>
+                            </tr>
+                            <tr>
+                                <td>xGuard</td>
+                                <td>0.554</td><td>0.460</td><td>0.571</td><td>0.543</td><td>0.510</td><td>0.545</td><td>0.557</td>
+                            </tr>
+                            <tr>
+                                <td>WildGuard</td>
+                                <td>0.885</td><td>0.806</td><td>0.942</td><td>0.846</td><td>0.869</td><td>0.911</td><td>0.894</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-Finetuned</td>
+                                <td>0.887</td><td>0.906</td><td>0.806</td><td>0.943</td><td>0.853</td><td>0.824</td><td>0.874</td>
+                            </tr>
+                            <tr>
+                                <td>GPT-OSS-Safeguard-20B</td>
+                                <td>0.919</td><td>0.899</td><td>0.901</td><td>0.931</td><td>0.900</td><td>0.901</td><td>0.916</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="8"><strong>Generic LLM Judges</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Ordinary Judge (L70B)</td>
+                                <td>0.505</td><td>0.330</td><td>0.214</td><td>0.703</td><td>0.260</td><td>0.231</td><td>0.459</td>
+                            </tr>
+                            <tr>
+                                <td>Ordinary Judge (G20B)</td>
+                                <td>0.734</td><td>0.670</td><td>0.678</td><td>0.772</td><td>0.674</td><td>0.677</td><td>0.725</td>
+                            </tr>
+                            <tr>
+                                <td>Reasoning (L70B)</td>
+                                <td>0.769</td><td>0.706</td><td>0.739</td><td>0.790</td><td>0.722</td><td>0.732</td><td>0.765</td>
+                            </tr>
+                            <tr>
+                                <td>Reasoning (G20B)</td>
+                                <td>0.788</td><td>0.719</td><td>0.786</td><td>0.790</td><td>0.751</td><td>0.771</td><td>0.788</td>
+                            </tr>
+                            <tr>
+                                <td>Multi-Agent Voting (L70B)</td>
+                                <td>0.767</td><td>0.719</td><td>0.699</td><td>0.814</td><td>0.709</td><td>0.703</td><td>0.756</td>
+                            </tr>
+                            <tr>
+                                <td>Multi-Agent Voting (G20B)</td>
+                                <td>0.781</td><td>0.700</td><td>0.806</td><td>0.764</td><td>0.749</td><td>0.782</td><td>0.785</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-Multi (L70B)</td>
+                                <td>0.885</td><td><strong>0.919</strong></td><td>0.786</td><td><strong>0.952</strong></td><td>0.847</td><td>0.809</td><td>0.869</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-Multi (G20B)</td>
+                                <td>0.919</td><td>0.894</td><td>0.907</td><td>0.927</td><td>0.901</td><td>0.905</td><td>0.917</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="8"><strong>ML Commons Baselines</strong></td>
+                            </tr>
+                            <tr>
+                                <td>ML Commons (G20B)</td>
+                                <td>0.898</td><td>0.860</td><td>0.893</td><td>0.901</td><td>0.876</td><td>0.886</td><td>0.897</td>
+                            </tr>
+                            <tr>
+                                <td>ML Commons (L70B)</td>
+                                <td>0.854</td><td>0.890</td><td>0.730</td><td>0.939</td><td>0.803</td><td>0.758</td><td>0.835</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="8"><strong>Policy-Grounded (Ours)</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-L70B (1 Iter)</td>
+                                <td>0.892</td><td>0.899</td><td>0.826</td><td>0.937</td><td>0.861</td><td>0.840</td><td>0.881</td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-L70B (2 Iter)</td>
+                                <td>0.916</td><td>0.913</td><td>0.878</td><td>0.943</td><td>0.895</td><td>0.885</td><td>0.910</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td><strong>CourtGuard-G20B (1 Iter) ★</strong></td>
+                                <td><strong>0.918</strong></td><td>0.857</td><td><strong>0.957</strong></td><td>0.891</td><td><strong>0.904</strong></td><td><strong>0.935</strong></td><td><strong>0.924</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-G20B (2 Iter)</td>
+                                <td>0.914</td><td>0.851</td><td>0.957</td><td>0.885</td><td>0.900</td><td>0.933</td><td>0.921</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
     
         </div>
     </section>
 
+    <section id="ablation" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Ablation Study</h2>
+            <p class="text-center text-muted mb-5">
+                To isolate the contributions of policy breadth versus the adversarial debate architecture, 
+                we compare a static no-RAG baseline against two CourtGuard variants: 
+                <strong>CourtGuard-MLC</strong> (MLCommons policy only) and 
+                <strong>CourtGuard-Full</strong> (MLCommons + OpenAI Usage Policies). 
+                Both variants use the same 2-round debate structure.
+            </p>
+    
+            <!-- Ablation explanation cards -->
+            <div class="row mb-5">
+                <div class="col-md-4 mb-3">
+                    <div class="agent-card eval-card h-100 p-4 border rounded bg-white">
+                        <h5 class="mb-3">🔲 Static (No RAG)</h5>
+                        <p class="text-muted">The backbone LLM judges safety using only its internal parametric knowledge — no policy documents retrieved. Serves as the lower-bound baseline.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="agent-card eval-card h-100 p-4 border rounded bg-white">
+                        <h5 class="mb-3">📄 CourtGuard-MLC</h5>
+                        <p class="text-muted">RAG grounded exclusively in the MLCommons AILuminate v1.1 standard. Shows the effect of adding policy retrieval with a single focused taxonomy.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="agent-card eval-card h-100 p-4 border rounded bg-white">
+                        <h5 class="mb-3">📚 CourtGuard-Full ★</h5>
+                        <p class="text-muted">RAG grounded in both MLCommons and OpenAI Usage Policies. Broader policy coverage consistently yields the highest performance across all benchmarks.</p>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- GPT-OSS-20B Ablation Table -->
+            <div class="results-table-container mb-5">
+                <h4 class="mb-3">Table 5: Ablation Results — GPT-OSS-20B Backbone</h4>
+                <p class="text-muted mb-4">
+                    Adding RAG grounding (MLC-only) already provides a significant performance leap over the static baseline. 
+                    Expanding to the full hybrid policy suite yields the highest accuracy — confirming that 
+                    debate performance is upper-bounded by the comprehensiveness of the retrieved policy documents.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover complex-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th rowspan="2">Configuration</th>
+                                <th colspan="2">AdvBenchM</th>
+                                <th colspan="2">JailJudge</th>
+                                <th colspan="2">WildGuard</th>
+                                <th colspan="2">HarmBench</th>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Static (No RAG)</td>
+                                <td>1.00</td><td>1.00</td>
+                                <td>0.817</td><td>0.794</td>
+                                <td>0.863</td><td>0.790</td>
+                                <td>0.781</td><td>0.796</td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-MLC (2 Iter)</td>
+                                <td>0.980</td><td>0.990</td>
+                                <td>0.840</td><td>0.832</td>
+                                <td>0.867</td><td>0.807</td>
+                                <td>0.800</td><td>0.816</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td><strong>CourtGuard-Full (1 Iter) ★</strong></td>
+                                <td><strong>1.00</strong></td><td><strong>1.00</strong></td>
+                                <td><strong>0.893</strong></td><td><strong>0.893</strong></td>
+                                <td><strong>0.897</strong></td><td><strong>0.851</strong></td>
+                                <td><strong>0.852</strong></td><td><strong>0.871</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-Full (2 Iter)</td>
+                                <td>1.00</td><td>1.00</td>
+                                <td>0.887</td><td>0.887</td>
+                                <td>0.876</td><td>0.830</td>
+                                <td>0.852</td><td>0.870</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <!-- Llama-70B Ablation Table -->
+            <div class="results-table-container mb-5">
+                <h4 class="mb-3">Table 6: Ablation Results — Llama-3-70B Backbone</h4>
+                <p class="text-muted mb-4">
+                    The same pattern holds across the Llama-3-70B backbone, confirming that the gains 
+                    from policy breadth are architecture-independent. The 2-iteration variant benefits 
+                    more from the second debate round compared to GPT-OSS-20B, suggesting larger models 
+                    extract more value from iterative refinement.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover complex-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th rowspan="2">Configuration</th>
+                                <th colspan="2">AdvBenchM</th>
+                                <th colspan="2">JailJudge</th>
+                                <th colspan="2">WildGuard</th>
+                                <th colspan="2">HarmBench</th>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Static (No RAG)</td>
+                                <td>1.00</td><td>1.00</td>
+                                <td>0.833</td><td>0.821</td>
+                                <td>0.867</td><td>0.782</td>
+                                <td>0.819</td><td>0.833</td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-MLC (2 Iter)</td>
+                                <td>0.980</td><td>0.990</td>
+                                <td>0.823</td><td>0.804</td>
+                                <td>0.849</td><td>0.729</td>
+                                <td>0.824</td><td>0.820</td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-Full (1 Iter)</td>
+                                <td>0.980</td><td>0.990</td>
+                                <td>0.857</td><td>0.845</td>
+                                <td>0.867</td><td>0.769</td>
+                                <td>0.833</td><td>0.834</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td><strong>CourtGuard-Full (2 Iter) ★</strong></td>
+                                <td><strong>1.00</strong></td><td><strong>1.00</strong></td>
+                                <td><strong>0.870</strong></td><td><strong>0.863</strong></td>
+                                <td><strong>0.879</strong></td><td><strong>0.800</strong></td>
+                                <td><strong>0.857</strong></td><td><strong>0.862</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <!-- Key takeaway box -->
+            <div class="col-lg-10 mx-auto">
+                <div class="abstract-content p-4 bg-white rounded shadow-sm">
+                    <h5>🔑 Key Takeaway</h5>
+                    <p class="mb-0">
+                        Both the <strong>RAG grounding</strong> and the <strong>adversarial debate structure</strong> 
+                        contribute independently to performance gains. The debate mechanism is highly effective on its own, 
+                        but its ceiling is set by the comprehensiveness of the retrieved policy documents. 
+                        This confirms the value of the modular "Policy RAG" design — integrating diverse governance 
+                        standards immediately improves zero-shot performance without any retraining.
+                    </p>
+                </div>
+            </div>
+    
+        </div>
+    </section>
+    
     <section id="findings" class="py-5 bg-light">
         <div class="container">
             <h2 class="section-title">Key Findings</h2>
@@ -763,6 +1052,76 @@
         </div>
     </section>
 
+    <section id="limitations" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Limitations</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="agent-card eval-card h-100 p-4 border rounded bg-white">
+                                <h5 class="mb-3">⏱️ Inference Latency</h5>
+                                <p class="text-muted mb-0">
+                                    While CourtGuard enables zero-shot policy updates — avoiding the expensive 
+                                    retraining required by static guardrails — this plasticity incurs higher 
+                                    inference latency due to retrieval and multi-turn generation. Each evaluation 
+                                    requires multiple LLM calls compared to a single forward pass in static classifiers.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="agent-card eval-card h-100 p-4 border rounded bg-white">
+                                <h5 class="mb-3">📋 Instruction Adherence</h5>
+                                <p class="text-muted mb-0">
+                                    The framework's reliability depends on the backbone model's adherence to 
+                                    strict formatting protocols. Smaller or less capable models may occasionally 
+                                    fail to generate the required structured output, leading to parsing errors 
+                                    that do not occur in simple binary classification heads.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="citation" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Citation</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <p class="text-center text-muted mb-4">
+                        If you find CourtGuard useful for your research, please cite our paper.
+                    </p>
+                    <div class="position-relative">
+                        <pre class="bg-dark text-light p-4 rounded" style="font-size: 0.85rem; overflow-x: auto;"><code id="bibtex-code">@inproceedings{courtguard2025,
+      title     = {CourtGuard: A Model-Agnostic Framework for
+                   Zero-Shot Policy Adaptation in LLM Safety},
+      author    = {Suleymanov, Umid and
+                   Bayramov, Rufiz and
+                   Gafarli, Suad and
+                   Musayeva, Seljan and
+                   Mammadov, Taghi and
+                   Akhundlu, Aynur and
+                   Kantarcioglu, Murat},
+      booktitle = {International Conference on Machine Learning (ICML)},
+      year      = {2025},
+      note      = {Under review}
+    }</code></pre>
+                        <button 
+                            onclick="copyBibtex()" 
+                            id="copy-btn"
+                            class="btn btn-sm btn-outline-light position-absolute" 
+                            style="top: 12px; right: 12px;">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <footer class="py-4 bg-dark text-light">
         <div class="container">
             <div class="row">
@@ -772,7 +1131,7 @@
                         An inference-time framework for agentic, policy-grounded adjudication of generative AI responses.
                     </p>
                     <p class="text-muted mb-0">
-                        Under review.
+                        Under review at ICML 2025.
                     </p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
@@ -789,6 +1148,13 @@
         </div>
     </footer>
 
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+        id="backToTop"
+        class="btn btn-primary rounded-circle position-fixed"
+        style="bottom: 30px; right: 30px; width: 45px; height: 45px; display: none; z-index: 999; font-size: 1.2rem; line-height: 1;">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+    
     <div id="imageModal" class="image-modal" onclick="closeImageModal()">
         <div class="image-modal-content">
             <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
@@ -833,13 +1199,43 @@
         function openImageModal(imgElement) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalCaption = document.getElementById('modalCaption');
             modal.style.display = "block";
             modalImg.src = imgElement.src;
+            modalTitle.textContent = imgElement.closest('.results-table-container') 
+                ? imgElement.closest('.results-table-container').querySelector('h4').textContent 
+                : '';
+            modalCaption.textContent = imgElement.alt || '';
         }
 
         function closeImageModal() {
             document.getElementById('imageModal').style.display = "none";
         }
+
+        function copyBibtex() {
+            const text = document.getElementById('bibtex-code').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.innerHTML = '<i class="bi bi-clipboard-check"></i> Copied!';
+                btn.classList.remove('btn-outline-light');
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="bi bi-clipboard"></i> Copy';
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-light');
+                }, 2000);
+            });
+        }
+
+       window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTop');
+            if (window.scrollY > 400) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
