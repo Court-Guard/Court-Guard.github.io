@@ -41,9 +41,12 @@
                         By orchestrating an adversarial debate grounded in external policy documents, it overcomes adaptation rigidity without expensive retraining.
                     </p>
 
-                    <div class="text-center mb-4">
+                    <div class="text-center mb-4 d-flex justify-content-center gap-3 flex-wrap">
                         <a href="https://anonymous.4open.science/r/CourtGuard_ICML/README.md" class="btn btn-primary btn-lg">
-                            <i class="bi bi-download"></i> Datasets & Code
+                            <i class="bi bi-github"></i> Datasets & Code
+                        </a>
+                        <a href="https://anonymous.4open.science/r/CourtGuard_ICML/README.md" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-file-earmark-text"></i> Read Paper
                         </a>
                     </div>
 
@@ -56,22 +59,22 @@
                     </div>
                     
                     <div class="key-stats row">
-                        <div class="col-md-4">
-                            <div class="stat-card">
+                        <div class="col-md-4 mb-3">
+                            <div class="stat-card text-center p-4 rounded shadow-sm border">
                                 <h3 class="text-success">90%</h3>
-                                <p>Accuracy on Zero-Shot Wikipedia Vandalism</p>
+                                <p class="mb-0 text-muted">Accuracy on Zero-Shot Wikipedia Vandalism</p>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="stat-card">
+                        <div class="col-md-4 mb-3">
+                            <div class="stat-card text-center p-4 rounded shadow-sm border">
                                 <h3 class="text-success">93.9%</h3>
-                                <p>Expert-AI Alignment in Legal Compliance</p>
+                                <p class="mb-0 text-muted">Expert-AI Alignment in Legal Compliance</p>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="stat-card">
+                        <div class="col-md-4 mb-3">
+                            <div class="stat-card text-center p-4 rounded shadow-sm border">
                                 <h3 class="text-info">8</h3>
-                                <p>Safety Benchmarks Evaluated</p>
+                                <p class="mb-0 text-muted">Safety Benchmarks Evaluated</p>
                             </div>
                         </div>
                     </div>
@@ -117,7 +120,7 @@
             <div class="row">
                 <div class="col-lg-4 mb-4">
                     <div class="semsi-category" data-category="static">
-                        <div class="category-header" onclick="toggleCategory('static')">
+                        <div class="category-header" onclick="toggleCategory('static', event)">
                             <h4 class="icon-identity">Static Guardrails</h4>
                             <span class="toggle-icon">+</span>
                         </div>
@@ -140,7 +143,7 @@
 
                 <div class="col-lg-4 mb-4">
                     <div class="semsi-category" data-category="agentic">
-                        <div class="category-header" onclick="toggleCategory('agentic')">
+                        <div class="category-header" onclick="toggleCategory('agentic', event)">
                             <h4 class="icon-reputation">Agentic Adjudication</h4>
                             <span class="toggle-icon">+</span>
                         </div>
@@ -163,7 +166,7 @@
 
                 <div class="col-lg-4 mb-4">
                     <div class="semsi-category" data-category="policy">
-                        <div class="category-header" onclick="toggleCategory('policy')">
+                        <div class="category-header" onclick="toggleCategory('policy', event)">
                             <h4 class="icon-hazard">Policy-Following Frameworks</h4>
                             <span class="toggle-icon">+</span>
                         </div>
@@ -242,28 +245,427 @@
     <section id="results" class="py-5">
         <div class="container">
             <h2 class="section-title">Benchmark Results</h2>
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="results-table-container">
-                        <h4 class="mb-4">Main Results: Performance Across 8 Datasets</h4>
-                        <p class="table-description text-muted mb-4">
-                            We compare <strong>CourtGuard</strong> against <strong>Static Guardrails</strong> (LlamaGuard, ShieldGemma, WildGuard) and <strong>Generic LLM Judges</strong>. CourtGuard-GPT-OSS-20B (2 Iter) achieves the highest macro average accuracy (0.87) and F1 score (0.86), surpassing widely used models like LlamaGuard 4 without any fine-tuning.
-                        </p>
-                        <div class="text-center mb-5">
-                            <img src="main_results.png" alt="Main Results: Performance Across 8 Datasets" class="img-fluid border rounded shadow-sm clickable-image" onclick="openImageModal(this)">
-                        </div>
-
-                                                <h4 class="mb-4 mt-5 border-top pt-4">Aggregated Safety Sensitivity & Human-Verified Attacks</h4>
-                        <p class="table-description text-muted mb-4">
-                            CourtGuard neutralizes the trade-off between helpfulness and safety, maintaining high specificity without succumbing to high False Negative rates on complex optimization attacks.
-                        </p>
-                        <div class="text-center">
-                            <img src="aggregation.png" alt="Aggregated Performance and Human Verified Attacks" class="img-fluid border rounded shadow-sm clickable-image" onclick="openImageModal(this)">
-                        </div>
-                    </div>
+    
+            <!-- Main Results Table -->
+            <div class="results-table-container mb-5">
+                <h4 class="mb-3">Table 1: Main Results — Accuracy / F1 Across 8 Datasets</h4>
+                <p class="text-muted mb-4">
+                    CourtGuard-GPT-OSS-20B (2 Iter) achieves the highest macro average accuracy (0.87) and F1 (0.86), 
+                    surpassing dedicated fine-tuned guardrails like LlamaGuard 4 and WildGuard without any fine-tuning. 
+                    <strong>Bold</strong> = best. <span class="text-decoration-underline">Underline</span> = second best.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover complex-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th rowspan="2">Method</th>
+                                <th colspan="2">AVG</th>
+                                <th colspan="2">AdvBenchM</th>
+                                <th colspan="2">JailJudge</th>
+                                <th colspan="2">WildGuard</th>
+                                <th colspan="2">HarmBench</th>
+                                <th colspan="2">SafeRLHF</th>
+                                <th colspan="2">BeaverTails</th>
+                                <th colspan="2">XSTest</th>
+                                <th colspan="2">ToxicChat</th>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                                <th>Acc</th><th>F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-light">
+                                <td colspan="19"><strong>Static Guardrails & Baselines</strong></td>
+                            </tr>
+                            <tr>
+                                <td>LlamaGuard 4</td>
+                                <td>0.77</td><td>0.75</td>
+                                <td>0.96</td><td>0.98</td>
+                                <td>0.72</td><td>0.74</td>
+                                <td>0.76</td><td>0.66</td>
+                                <td>0.78</td><td>0.81</td>
+                                <td>0.84</td><td>0.85</td>
+                                <td>0.50</td><td>0.64</td>
+                                <td>0.94</td><td>0.83</td>
+                                <td>0.69</td><td>0.49</td>
+                            </tr>
+                            <tr>
+                                <td>LlamaGuard 3</td>
+                                <td>0.75</td><td>0.70</td>
+                                <td>0.98</td><td>0.99</td>
+                                <td>0.66</td><td>0.71</td>
+                                <td>0.80</td><td>0.67</td>
+                                <td>0.73</td><td>0.77</td>
+                                <td>0.87</td><td>0.88</td>
+                                <td>0.53</td><td>0.68</td>
+                                <td>0.82</td><td>0.61</td>
+                                <td>0.61</td><td>0.30</td>
+                            </tr>
+                            <tr>
+                                <td>ShieldGemma 2B</td>
+                                <td>0.58</td><td>0.42</td>
+                                <td>0.34</td><td>0.51</td>
+                                <td>0.52</td><td>0.35</td>
+                                <td>0.66</td><td>0.29</td>
+                                <td>0.55</td><td>0.44</td>
+                                <td>0.64</td><td>0.54</td>
+                                <td>0.43</td><td>0.56</td>
+                                <td>0.84</td><td>0.62</td>
+                                <td>0.64</td><td>0.04</td>
+                            </tr>
+                            <tr>
+                                <td>ShieldGemma 9B</td>
+                                <td>0.45</td><td>0.15</td>
+                                <td>0.00</td><td>0.00</td>
+                                <td>0.44</td><td>0.23</td>
+                                <td>0.62</td><td>0.11</td>
+                                <td>0.43</td><td>0.05</td>
+                                <td>0.47</td><td>0.19</td>
+                                <td>0.18</td><td>0.23</td>
+                                <td>0.76</td><td>0.15</td>
+                                <td>0.67</td><td>0.24</td>
+                            </tr>
+                            <tr>
+                                <td>ShieldGemma 27B</td>
+                                <td>0.57</td><td>0.53</td>
+                                <td>0.46</td><td>0.63</td>
+                                <td>0.50</td><td>0.54</td>
+                                <td>0.60</td><td>0.45</td>
+                                <td>0.48</td><td>0.47</td>
+                                <td>0.67</td><td>0.64</td>
+                                <td>0.53</td><td>0.67</td>
+                                <td>0.74</td><td>0.52</td>
+                                <td>0.57</td><td>0.31</td>
+                            </tr>
+                            <tr>
+                                <td>WildGuard</td>
+                                <td>0.86</td><td>0.84</td>
+                                <td>1.00</td><td>1.00</td>
+                                <td>0.88</td><td>0.89</td>
+                                <td>0.87</td><td>0.82</td>
+                                <td>0.84</td><td>0.86</td>
+                                <td>0.84</td><td>0.88</td>
+                                <td>0.80</td><td>0.88</td>
+                                <td>0.97</td><td>0.90</td>
+                                <td>0.66</td><td>0.53</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-Finetuned</td>
+                                <td>0.84</td><td>0.81</td>
+                                <td>0.96</td><td>0.98</td>
+                                <td>0.92</td><td>0.92</td>
+                                <td>0.85</td><td>0.75</td>
+                                <td>0.83</td><td>0.84</td>
+                                <td>0.88</td><td>0.90</td>
+                                <td>0.67</td><td>0.78</td>
+                                <td>0.96</td><td>0.89</td>
+                                <td>0.64</td><td>0.40</td>
+                            </tr>
+                            <tr>
+                                <td>GPT-OSS-Safeguard-20B</td>
+                                <td>0.82</td><td>0.78</td>
+                                <td>0.98</td><td>0.99</td>
+                                <td>0.80</td><td>0.78</td>
+                                <td>0.88</td><td>0.80</td>
+                                <td>0.82</td><td>0.82</td>
+                                <td>0.87</td><td>0.88</td>
+                                <td>0.57</td><td>0.70</td>
+                                <td>0.98</td><td>0.93</td>
+                                <td>0.66</td><td>0.32</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="19"><strong>Generic LLM Judges</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Ordinary Judge (Llama-70B)</td>
+                                <td>0.63</td><td>0.43</td>
+                                <td>0.96</td><td>0.98</td>
+                                <td>0.46</td><td>0.13</td>
+                                <td>0.76</td><td>0.51</td>
+                                <td>0.55</td><td>0.36</td>
+                                <td>0.66</td><td>0.58</td>
+                                <td>0.19</td><td>0.24</td>
+                                <td>0.84</td><td>0.33</td>
+                                <td>0.65</td><td>0.32</td>
+                            </tr>
+                            <tr>
+                                <td>Ordinary Judge (GPT-OSS-20B)</td>
+                                <td>0.83</td><td>0.81</td>
+                                <td>0.86</td><td>0.92</td>
+                                <td>0.86</td><td>0.85</td>
+                                <td>0.88</td><td>0.81</td>
+                                <td>0.78</td><td>0.80</td>
+                                <td>0.90</td><td>0.91</td>
+                                <td>0.66</td><td>0.78</td>
+                                <td>0.98</td><td>0.93</td>
+                                <td>0.69</td><td>0.48</td>
+                            </tr>
+                            <tr>
+                                <td>Reasoning Llama-70B</td>
+                                <td>0.86</td><td>0.84</td>
+                                <td>0.94</td><td>0.97</td>
+                                <td>0.89</td><td>0.89</td>
+                                <td>0.87</td><td>0.79</td>
+                                <td>0.87</td><td>0.88</td>
+                                <td>0.88</td><td>0.90</td>
+                                <td>0.72</td><td>0.82</td>
+                                <td>0.96</td><td>0.88</td>
+                                <td>0.71</td><td>0.55</td>
+                            </tr>
+                            <tr>
+                                <td>Reasoning GPT-OSS-20B</td>
+                                <td>0.85</td><td>0.82</td>
+                                <td>0.96</td><td>0.98</td>
+                                <td>0.89</td><td>0.89</td>
+                                <td>0.88</td><td>0.83</td>
+                                <td>0.88</td><td>0.89</td>
+                                <td>0.90</td><td>0.92</td>
+                                <td>0.72</td><td>0.83</td>
+                                <td>0.91</td><td>0.76</td>
+                                <td>0.63</td><td>0.45</td>
+                            </tr>
+                            <tr>
+                                <td>Multi-Agent Voting Llama-70B</td>
+                                <td>0.86</td><td>0.84</td>
+                                <td>0.92</td><td>0.96</td>
+                                <td>0.88</td><td>0.88</td>
+                                <td>0.87</td><td>0.78</td>
+                                <td>0.86</td><td>0.87</td>
+                                <td>0.93</td><td>0.94</td>
+                                <td>0.71</td><td>0.82</td>
+                                <td>0.97</td><td>0.91</td>
+                                <td>0.74</td><td>0.57</td>
+                            </tr>
+                            <tr>
+                                <td>Multi-Agent Voting GPT-OSS-20B</td>
+                                <td>0.86</td><td>0.83</td>
+                                <td>1.00</td><td>1.00</td>
+                                <td>0.92</td><td>0.92</td>
+                                <td>0.87</td><td>0.83</td>
+                                <td>0.86</td><td>0.88</td>
+                                <td>0.89</td><td>0.91</td>
+                                <td>0.76</td><td>0.85</td>
+                                <td>0.89</td><td>0.74</td>
+                                <td>0.66</td><td>0.50</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-MultiAgent-Llama-70B</td>
+                                <td>0.81</td><td>0.78</td>
+                                <td>0.74</td><td>0.85</td>
+                                <td>0.88</td><td>0.87</td>
+                                <td>0.76</td><td>0.56</td>
+                                <td>0.83</td><td>0.84</td>
+                                <td>0.92</td><td>0.93</td>
+                                <td>0.68</td><td>0.79</td>
+                                <td>0.98</td><td>0.93</td>
+                                <td>0.72</td><td>0.50</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-MultiAgent-GPT-OSS-20B</td>
+                                <td>0.86</td><td>0.83</td>
+                                <td>0.96</td><td>0.98</td>
+                                <td>0.90</td><td>0.90</td>
+                                <td>0.89</td><td>0.84</td>
+                                <td>0.86</td><td>0.87</td>
+                                <td>0.89</td><td>0.91</td>
+                                <td>0.72</td><td>0.82</td>
+                                <td>0.94</td><td>0.84</td>
+                                <td>0.70</td><td>0.49</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="19"><strong>Policy-Grounded (Ours)</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-Llama-70B (1 Iter)</td>
+                                <td>0.85</td><td>0.82</td>
+                                <td>0.98</td><td>0.99</td>
+                                <td>0.86</td><td>0.84</td>
+                                <td>0.87</td><td>0.77</td>
+                                <td>0.83</td><td>0.83</td>
+                                <td>0.92</td><td>0.92</td>
+                                <td>0.59</td><td>0.72</td>
+                                <td>0.98</td><td>0.93</td>
+                                <td>0.76</td><td>0.56</td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-Llama-70B (2 Iter)</td>
+                                <td>0.86</td><td>0.84</td>
+                                <td>1.00</td><td>1.00</td>
+                                <td>0.87</td><td>0.86</td>
+                                <td>0.88</td><td>0.80</td>
+                                <td>0.86</td><td>0.86</td>
+                                <td>0.91</td><td>0.92</td>
+                                <td>0.63</td><td>0.76</td>
+                                <td>0.98</td><td>0.95</td>
+                                <td>0.77</td><td>0.58</td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-GPT-OSS-20B (1 Iter)</td>
+                                <td>0.86</td><td>0.84</td>
+                                <td>1.00</td><td>1.00</td>
+                                <td>0.89</td><td>0.89</td>
+                                <td>0.90</td><td>0.85</td>
+                                <td>0.85</td><td>0.87</td>
+                                <td>0.89</td><td>0.91</td>
+                                <td>0.69</td><td>0.80</td>
+                                <td>0.94</td><td>0.84</td>
+                                <td>0.72</td><td>0.55</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td>CourtGuard-GPT-OSS-20B (2 Iter) ★</td>
+                                <td><strong>0.87</strong></td><td><strong>0.86</strong></td>
+                                <td><strong>1.00</strong></td><td><strong>1.00</strong></td>
+                                <td>0.89</td><td>0.89</td>
+                                <td>0.88</td><td>0.83</td>
+                                <td>0.85</td><td>0.87</td>
+                                <td>0.89</td><td>0.91</td>
+                                <td><strong>0.75</strong></td><td><strong>0.85</strong></td>
+                                <td>0.97</td><td>0.92</td>
+                                <td><strong>0.72</strong></td><td><strong>0.58</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+    
+            <!-- Human Verified Attacks Table -->
+            <div class="results-table-container mb-5">
+                <h4 class="mb-3">Table 2: Human-Verified Attack Suite — Aggregated Metrics</h4>
+                <p class="text-muted mb-4">
+                    Evaluated against 9 adversarial attack styles annotated by 3 human raters (Fleiss' κ = 0.786).
+                    CourtGuard-GPT-OSS-20B (1 Iter) achieves the highest Recall (0.957), F2 (0.935), and ROC AUC (0.924).
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover complex-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Method</th>
+                                <th>Acc</th>
+                                <th>Prec</th>
+                                <th>Rec</th>
+                                <th>Spec</th>
+                                <th>F1</th>
+                                <th>F2</th>
+                                <th>ROC AUC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-light">
+                                <td colspan="8"><strong>Static Guardrails</strong></td>
+                            </tr>
+                            <tr>
+                                <td>LlamaGuard 4</td>
+                                <td>0.815</td><td>0.764</td><td>0.788</td><td>0.834</td><td>0.776</td><td>0.783</td><td>0.811</td>
+                            </tr>
+                            <tr>
+                                <td>LlamaGuard 3</td>
+                                <td>0.641</td><td>0.548</td><td>0.664</td><td>0.626</td><td>0.600</td><td>0.637</td><td>0.645</td>
+                            </tr>
+                            <tr>
+                                <td>WildGuard</td>
+                                <td>0.885</td><td>0.806</td><td>0.942</td><td>0.846</td><td>0.869</td><td>0.911</td><td>0.894</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-Finetuned</td>
+                                <td>0.887</td><td>0.906</td><td>0.806</td><td>0.943</td><td>0.853</td><td>0.824</td><td>0.874</td>
+                            </tr>
+                            <tr>
+                                <td>GPT-OSS-Safeguard-20B</td>
+                                <td>0.919</td><td>0.899</td><td>0.901</td><td>0.931</td><td>0.900</td><td>0.901</td><td>0.916</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="8"><strong>Generic LLM Judges</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Reasoning Llama-70B</td>
+                                <td>0.769</td><td>0.706</td><td>0.739</td><td>0.790</td><td>0.722</td><td>0.732</td><td>0.765</td>
+                            </tr>
+                            <tr>
+                                <td>Reasoning GPT-OSS-20B</td>
+                                <td>0.788</td><td>0.719</td><td>0.786</td><td>0.790</td><td>0.751</td><td>0.771</td><td>0.788</td>
+                            </tr>
+                            <tr>
+                                <td>JailJudge-MultiAgent-GPT-OSS-20B</td>
+                                <td>0.919</td><td>0.894</td><td>0.907</td><td>0.927</td><td>0.901</td><td>0.905</td><td>0.917</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td colspan="8"><strong>Policy-Grounded (Ours)</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-Llama-70B (1 Iter)</td>
+                                <td>0.892</td><td>0.899</td><td>0.826</td><td>0.937</td><td>0.861</td><td>0.840</td><td>0.881</td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-Llama-70B (2 Iter)</td>
+                                <td>0.916</td><td>0.913</td><td>0.878</td><td>0.943</td><td>0.895</td><td>0.885</td><td>0.910</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td>CourtGuard-GPT-OSS-20B (1 Iter) ★</td>
+                                <td><strong>0.918</strong></td><td>0.857</td><td><strong>0.957</strong></td><td>0.891</td><td><strong>0.904</strong></td><td><strong>0.935</strong></td><td><strong>0.924</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CourtGuard-GPT-OSS-20B (2 Iter)</td>
+                                <td>0.914</td><td>0.851</td><td>0.957</td><td>0.885</td><td>0.900</td><td>0.933</td><td>0.921</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <!-- Zero Shot Table -->
+            <div class="results-table-container mb-5">
+                <h4 class="mb-3">Table 3: Zero-Shot Policy Adaptation — Wikipedia Vandalism</h4>
+                <p class="text-muted mb-4">
+                    CourtGuard matches the dedicated policy-following model and outperforms the base model
+                    with <strong>zero fine-tuning</strong>, simply by swapping the reference policy in the RAG store.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered complex-table" style="max-width: 400px;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Model</th>
+                                <th>Accuracy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>GPT-OSS-20B (Base Judge)</td>
+                                <td>86%</td>
+                            </tr>
+                            <tr>
+                                <td>GPT-OSS-Safeguard-20B (Policy-Following)</td>
+                                <td>90%</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td><strong>CourtGuard (Ours) ★</strong></td>
+                                <td><strong>90%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <!-- Aggregation image kept for visual per-attack breakdown -->
+            <div class="results-table-container">
+                <h4 class="mb-3">Per-Attack Sensitivity — Human-Verified Suite</h4>
+                <p class="text-muted mb-3">
+                    Granular breakdown across 9 adversarial attack styles. Click to enlarge.
+                </p>
+                <div class="text-center">
+                    <img src="aggregation.png" alt="Aggregated Performance and Human Verified Attacks" 
+                         class="img-fluid border rounded shadow-sm clickable-image" 
+                         onclick="openImageModal(this)">
+                </div>
+            </div>
+    
         </div>
     </section>
 
@@ -401,7 +803,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Simple script to handle toggles and modals mimicking original style
-        function toggleCategory(categoryId) {
+        function toggleCategory(categoryId, event) {
             const content = document.getElementById(categoryId + '-content');
             const icon = event.currentTarget.querySelector('.toggle-icon');
             if (content.style.display === "block") {
